@@ -62,6 +62,9 @@ def CopyTree(src,dst):
 		else:
 			shutil.copy(src+'/'+ele,dst+'/'+ele)
 	
+def compFont(src,dist):
+	pass
+
 def createNewProj():
 	sg.theme('Dark Amber')
 
@@ -122,11 +125,13 @@ def ShowBox(n):
 			if event == 'Comparar':
 				for j in range(len(n)):
 					if values[j]:
-						print(j)
+						i=sg.popup_yes_no('Você tem certeza que quer COMPARAR o projeto\n"'+n[j]+'"') 
+						if i=='Yes':
+							comparaProj(n[j],j)
 			if event == 'Deletar':
 				for j in range(len(n)):
 					if values[j]:
-						i=sg.popup_yes_no('Você tem certeza que quer apagar o projeto\n"'+n[j]+'"') 
+						i=sg.popup_yes_no('Você tem certeza que quer APAGAR o projeto\n"'+n[j]+'"') 
 						if i=='Yes':
 							deletaProj(n[j])
 				break
@@ -138,6 +143,15 @@ def deletaProj(na):
 	conn.commit()
 	shutil.rmtree(DirWay+na)
 	
+def comparaProj(na,i):
+	cursor.execute('''SELECT dir from projcomp;''')
+	Dire=[]
+	for dires in cursor.fetchall():
+		Dire.append(dires[0])
+	dD=DirWay+'/'+na
+	dF=Dire[i]
+	compFont(dF,dD)
+
 while True:
 	event, values = window.read()
 	if event == sg.WIN_CLOSED:
@@ -148,4 +162,3 @@ while True:
 		showProjs()
 
 window.close()
-
