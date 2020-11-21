@@ -1,6 +1,7 @@
 import PySimpleGUI as sg
 import sqlite3
-import os.path
+import os
+import shutil
 
 conn=sqlite3.connect('dircomp.db')
 
@@ -51,6 +52,16 @@ else:
 
 window=sg.Window('Rafa',layout)
 
+def CopyTree(src,dst):
+	dirEle=os.listdir(src)
+	for ele in dirEle:
+		i=ele.find('.')
+		if ele[i]!='.':
+			os.mkdir(dst+'/'+ele)
+			CopyTree(src+'/'+ele,dst+'/'+ele)
+		else:
+			shutil.copy(src+'/'+ele,dst+'/'+ele)
+	
 def createNewProj():
 	sg.theme('Dark Amber')
 
@@ -70,7 +81,8 @@ def createNewProj():
 		if event == 'Registrar':
 			n=values['-nom-']
 			d=values['-dir-']
-			createNewDir(n,d)
+			if n!='' and d!='':
+				createNewDir(n,d)
 			break
 
 	win1.close()	
@@ -83,6 +95,7 @@ def createNewDir(name,dire):
 	conn.commit()
 	sg.popup('Aviso', '"'+name+'" foi registrado\n')
 	os.mkdir(DirWay+name)
+	CopyTree(dire,DirWay+name)
 
 def showProjs():
 	cursor.execute('''SELECT nome from projcomp;''')
@@ -123,8 +136,8 @@ def ShowBox(n):
 def deletaProj(na):
 	c=cursor.execute('DELETE FROM projcomp WHERE nome="'+na+'"')
 	conn.commit()
+	shutil.rmtree(DirWay+na)
 	
-
 while True:
 	event, values = window.read()
 	if event == sg.WIN_CLOSED:
