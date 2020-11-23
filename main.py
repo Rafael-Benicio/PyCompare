@@ -1,7 +1,9 @@
 import PySimpleGUI as sg
 import sqlite3
-import os
+import os.path, time
 import shutil
+# import docx
+
 
 conn=sqlite3.connect('dircomp.db')
 
@@ -35,7 +37,7 @@ else:
 	winNew=sg.Window('DirNew',layNew)
 	while True:
 		event, values=winNew.read()
-		if event=='Cancelar':
+		if event=='Cancelar' or event == sg.WIN_CLOSED:
 			exit()
 		if event=='Ok':
 			if values['-dir-']=='':
@@ -62,8 +64,30 @@ def CopyTree(src,dst):
 		else:
 			shutil.copy(src+'/'+ele,dst+'/'+ele)
 	
+def getText(filename):
+	doc = docx.Document(filename)
+	fullText = []
+	for para in doc.paragraphs:
+		fullText.append(para.text)
+	return fullText
+
 def compFont(src,dist):
-	pass
+	dirEle=os.listdir(src)
+	for ele in dirEle:
+		i=ele.find('.')
+		if ele[i]!='.':
+			print('-------------------')
+			print(ele)
+			compFont(src+'/'+ele,dist+'/'+ele)
+			print('-------------------')
+		else:
+			print('-------------------')
+			text1=open(src+'/'+ele,'rb')
+			text2=open(dist+'/'+ele,'rb')
+			#code
+			text2.close()
+			text1.close()
+			print('----------------------')
 
 def createNewProj():
 	sg.theme('Dark Amber')
