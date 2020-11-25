@@ -70,6 +70,7 @@ def Logs(src,dist,name):
 	b=a.split()
 	with open(src+'/Logs.txt','a') as arq:
 		if name !=[]:
+			arq.writelines('\n')
 			arq.writelines('('+b[2]+'/'+b[1]+'/'+b[4]+'):\n')
 		for na in name:
 			arq.writelines('	('+na.upper()+')=>[Modificado]\n')
