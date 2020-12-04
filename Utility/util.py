@@ -26,8 +26,13 @@ def Logs(src,dist,name):
 		if name !=[]:
 			arq.writelines('\n')
 			arq.writelines('('+b[2]+'/'+b[1]+'/'+b[4]+'):\n')
+		tex=sg.popup_get_text('Comentário', 'Tópico Trabalhado na nova versão')
+		if tex:
+			pass
+		else:
+			tex='Sem Comentários'
 		for na in name:
-			arq.writelines('	('+na.upper()+')=>[Modificado]\n')
+			arq.writelines('	('+na.upper()+')=>['+tex+']\n')
 		arq.writelines('\n')
 		arq.writelines('\n')
 		arq.close()	
@@ -42,15 +47,12 @@ def compFont(src,dist):
 	for ele in dirEle:
 		i=ele.find('.')
 		if ele[i]!='.':
-			print('-------------------')
-			print(ele)
+			print('---------'+ele+'--------')
 			compFont(src+'/'+ele,dist+'/'+ele)
 			print('-------------------')
 		elif ele=='Logs.txt':
-			print('Logs.txt')
+			pass
 		else:
-			print('----------------------')
-			print(ele)
 			text1=open(src+'/'+ele,'rb')
 			text2=open(dist+'/'+ele,'rb')
 			doc1=[]
@@ -64,12 +66,13 @@ def compFont(src,dist):
 				do1=doc1[i]
 				do2=doc2[i]
 				if do1!=do2:
-					print('****Diferente')
+					print('----------------------')
+					print('# '+ele+' : Foi modificado')
+					print('----------------------')
 					changes.append(ele)
 					break	
 			text2.close()
 			text1.close()
-			print('----------------------')
 	if changes==[]:
 		sg.popup('Aviso', 'Não ouve Alterações\n desde a ultima versão registrada!')
 	else:
