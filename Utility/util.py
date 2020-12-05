@@ -26,10 +26,11 @@ def Logs(src,dist,name):
 		if name !=[]:
 			arq.writelines('\n')
 			arq.writelines('('+b[2]+'/'+b[1]+'/'+b[4]+'):\n')
-		tex=sg.popup_get_text('Comentário', 'Tópico Trabalhado na nova versão')
-		if tex:
-			pass
-		else:
+		e,v=sg.Window('Comentário',[[sg.Text('Comente as modificações')],[sg.InputText(key='-ke-',background_color='white',text_color='black')],[sg.Button('OK'),sg.Button('Cancelar')]]).read()
+		tex=''
+		if e =='OK' and v['-ke-']!='': 
+			tex=v['-ke-']
+		elif e=='Cancelar' or v['-ke-']=='' or e == sg.WIN_CLOSED:
 			tex='Sem Comentários'
 		for na in name:
 			arq.writelines('	('+na.upper()+')=>['+tex+']\n')
